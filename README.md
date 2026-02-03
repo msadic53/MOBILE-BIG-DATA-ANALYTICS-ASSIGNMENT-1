@@ -1,98 +1,77 @@
 # Mobile Big Data Analytics - Assignment 1
 
-## Project Overview
-This project analyzes mobile communication patterns (SMS, calls, and internet usage) across geographic grid squares in Milan, Italy using data from November 2-6, 2013. The analysis explores temporal patterns, domestic vs. international communication, and correlations between different communication types.
+## Overview
+This project analyzes mobile communication activity (SMS, calls, and internet usage) across Milan grid squares using three daily datasets from November 2013. The notebook loads, cleans, and merges the data, then answers the assignment questions with statistical summaries and visualizations.
 
-## Datasets
-The analysis combines three datasets:
-- `sms-call-internet-mi-2013-11-02.csv` - Data from November 2, 2013
-- `sms-call-internet-mi-2013-11-04.csv` - Data from November 4, 2013
-- `sms-call-internet-mi-2013-11-06.csv` - Data from November 6, 2013
-- I use combined the above dataset by using the concat method from pandas.
+## Data Sources
+Files used:
+- sms-call-internet-mi-2013-11-02.csv
+- sms-call-internet-mi-2013-11-04.csv
+- sms-call-internet-mi-2013-11-06.csv
 
-**Total Records:** Combined dataset containing comprehensive communication activity across all grid squares
+All three files are concatenated into one dataframe.
 
-## Data Features
-- **CellID:** Geographic grid square identifier
-- **DateTime:** Timestamp of activity
-- **countrycode:** International calling code (39 = Italy/Domestic)
-- **smsin/smsout:** Incoming and outgoing SMS counts
-- **callin/callout:** Incoming and outgoing call counts
-- **internet:** Internet usage data
+## Approach and Key Decisions
+1. **Load and merge**: Read the three CSVs and concatenate them into a single dataframe.
+2. **Feature engineering**: Split the datetime column into date and time, then drop datetime.
+3. **Missing values**: Apply mean imputation for smsin, smsout, callin, callout, and internet.
+4. **Aggregation**: Create total_sms and total_calls, then drop the original in/out columns to simplify analysis.
 
-## Analysis Sections
+## Data Summary 
+- **Total records**: 6,564,031
+- **Columns after aggregation**: 7
+- **Unique grid squares (CellID)**: 10,000
+- **Unique country codes**: 302
 
-### 1. Data Preprocessing
-- Loading and combining three separate CSV files using the concat method from pandas
-- The dataframe orginally had 6 features(colunms)
-- Splitting datetime into separate date and time columns by the total Data features to be 9 
-- The datetime feature was subsequently dropped
-- Handling missing values using mean imputation
-- Aggregating SMS and call metrics into total columns
+### Missing Values (before imputation)
+Missing counts per column:
+- smsin: 3,964,171
+- smsout: 5,025,738
+- callin: 4,761,685
+- callout: 3,764,484
+- internet: 3,621,117
 
-### 2. Exploratory Analysis
-- Use the info() method, five features had datatype float, 2 had datatype int and 2 also had  datatype object 
--
-
+Most missing values occurred in **smsout**. All missing values were imputed using the column mean.
 
 
-- Total number of records across all datasets
-- Unique grid squares (CellIDs) in the region
-- Unique country codes present in the data
-- 
-### 3. Peak Hour Analysis
-- Identification of peak and off-peak hours
-- Distribution visualization of activity by hour
-- Statistical analysis (mean, median, std, min, max) of total calls by hour
 
-### 4. Temporal Activity Patterns
-- Daytime vs. Nighttime activity analysis (6am-8pm vs. 8pm-6am)
-- Percentage breakdown of total activity by time period
-- Visualization of temporal patterns
+## Peak Hour Analysis
+- **Most common peak hour**: 12:00:00
+- **Least common hour**: 03:00:00
+- **Total calls by hour**: Mean, median, std, min, and max computed in the notebook using groupby on total_calls by time.
 
-### 5. Domestic vs. International Communication
-- Analysis of calls between domestic (Italy, countrycode=39) and international contacts
-- Percentage breakdown of call volume
-- Percentage breakdown of SMS volume
-- Hourly trends comparison
+### Daytime vs Nighttime Activity
+- **Daytime (6:00–20:00)**: 78.51% of total activity
+- **Nighttime (20:00–6:00)**: 21.49% of total activity
 
-### 6. International Call Patterns
-- Ratio analysis of outbound to inbound international calls
-- Time-series visualization of international call trends
+### Domestic vs International Communication
+- **Calls**: 33.11% domestic, 66.89% international
+- **SMS**: 24.98% domestic, 75.02% international
+- **International call ratio (inbound/outbound)**: 1.67
 
-### 7. Correlation Analysis
-- Pearson correlation between SMS volume and call volume at grid level
-- Scatter plot visualization
-- Interpretation of correlation strength
+### Correlation Between Activity Types
+- **Correlation (SMS vs Calls at grid level)**: 0.9862
+- **Interpretation**: Strong positive relationship—high SMS areas tend to be high call areas.
 
-## Key Findings
-- **Peak Hours:** Identified most active and least active hours for communication
-- **Activity Distribution:** Breakdown of daytime vs. nighttime communication patterns
-- **Domestic Dominance:** Percentage of domestic versus international calls and SMS
-- **International Patterns:** Ratio and trends of international communication
-- **SMS-Call Correlation:** Strength and nature of relationship between SMS and calling behavior
+## Visual Outputs Generated
+- peak_hours_distribution.png
+- domestic_vs_international_calls.png
+- domestic_vs_international_sms.png
+- international_call_volume.png
+- sms_call_volume_correlation.png
 
-## Technologies & Libraries
-- **Python 3.x**
-- **pandas:** Data manipulation and analysis
-- **numpy:** Numerical computing
-- **matplotlib:** Data visualization
+## Tools and Libraries
+- Python 3.x
+- pandas
+- numpy
+- matplotlib
 
 ## How to Run
-1. Ensure all three CSV files are in the same directory as the notebook
-2. Install required dependencies: `pandas`, `numpy`, `matplotlib`
-3. Open and run `MBD assignment 1.ipynb` in Jupyter Notebook or JupyterLab
-4. Execute cells sequentially to perform the complete analysis
-
-## Output Files
-The notebook generates several visualization outputs:
-- `domestic_vs_international_calls.png` - Pie chart of call distribution
-- `domestic_vs_international_sms.png` - Pie chart of SMS distribution
-- `international_call_volume.png` - Bar chart of international call volume
-- `sms_call_volume_correlation.png` - Scatter plot of SMS-call correlation
+1. Place the three CSV files in the same folder as the notebook.
+2. Install dependencies: pandas, numpy, matplotlib.
+3. Open and run abubakam_MobileBigDataAnalytics_Ass1.ipynb from top to bottom.
 
 ## Notes
-- Missing values in numerical columns were filled using column means
-- Daytime is defined as 6:00 AM to 8:00 PM
-- Nighttime is defined as 8:00 PM to 6:00 AM
-- Domestic calls/SMS are identified by country code 39 (Italy)
+- Daytime is defined as 6:00 AM to 8:00 PM.
+- Nighttime is defined as 8:00 PM to 6:00 AM.
+- Domestic communication is identified using country code 39 (Italy).
